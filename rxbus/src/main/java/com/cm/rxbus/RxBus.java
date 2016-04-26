@@ -106,10 +106,10 @@ public class RxBus {
     }
 
 
-
-
-
-
+    /**
+     * 注册
+     * @param subscriber 订阅者
+     */
     public void register(Object subscriber){
         Class<?> subClass = subscriber.getClass();
         Method[] methods = subClass.getDeclaredMethods();
@@ -137,6 +137,11 @@ public class RxBus {
     }
 
 
+    /**
+     * 将event的类型以订阅中subscriber为key保存到map里
+     * @param subscriber 订阅者
+     * @param eventType event类型
+     */
     private void addEventTypeToMap(Object subscriber, Class eventType){
         List<Class> eventTypes = eventTypesBySubscriber.get(subscriber);
         if(eventTypes == null){
@@ -149,6 +154,11 @@ public class RxBus {
         }
     }
 
+    /**
+     * 将注解方法信息以event类型为key保存到map中
+     * @param eventType event类型
+     * @param subscriberMethod 注解方法信息
+     */
     private void addSubscriberToMap(Class eventType, SubscriberMethod subscriberMethod){
         List<SubscriberMethod> subscriberMethods = subscriberMethodByEventType.get(eventType);
         if(subscriberMethods == null){
@@ -162,6 +172,11 @@ public class RxBus {
     }
 
 
+    /**
+     *将订阅事件以event类型为key保存到map,用于取消订阅时用
+     * @param eventType event类型
+     * @param subscription 订阅事件
+     */
     private void addSubscriptionToMap(Class eventType, Subscription subscription){
         List<Subscription> subscriptions = subscriptionsByEventType.get(eventType);
         if(subscriptions == null){
@@ -176,7 +191,7 @@ public class RxBus {
 
 
     /**
-     * 添加观察者
+     * 用RxJava添加订阅者
      * @param subscriberMethod
      */
     public  void addSubscriber(final SubscriberMethod subscriberMethod){
@@ -198,6 +213,12 @@ public class RxBus {
     }
 
 
+    /**
+     * 用于处理订阅事件在那个线程中执行
+     * @param observable
+     * @param subscriberMethod
+     * @return
+     */
     private Observable postToObservable(Observable observable, SubscriberMethod subscriberMethod) {
 
         switch (subscriberMethod.threadMode) {
@@ -218,7 +239,11 @@ public class RxBus {
     }
 
 
-
+    /**
+     * 回调到订阅者的方法中
+     * @param code code
+     * @param object obj
+     */
     private void callEvent(int code, Object object){
         Class eventClass = object.getClass();
         List<SubscriberMethod> methods = subscriberMethodByEventType.get(eventClass);
@@ -236,7 +261,10 @@ public class RxBus {
     }
 
 
-
+    /**
+     * 取消注册
+     * @param subscriber
+     */
     public void unRegister(Object subscriber){
         List<Class> subscribedTypes = eventTypesBySubscriber.get(subscriber);
         if (subscribedTypes != null) {
@@ -249,6 +277,10 @@ public class RxBus {
     }
 
 
+    /**
+     * subscriptions unsubscribe
+     * @param eventType
+     */
     private void unSubscribeByEventType(Class eventType){
         List<Subscription> subscriptions = subscriptionsByEventType.get(eventType);
         if (subscriptions != null) {
@@ -263,6 +295,11 @@ public class RxBus {
         }
     }
 
+    /**
+     * 移除subscriber对应的subscriberMethods
+     * @param subscriber
+     * @param eventType
+     */
     private void unSubscribeMethodByEventType(Object subscriber, Class eventType){
         List<SubscriberMethod> subscriberMethods = subscriberMethodByEventType.get(eventType);
         if(subscriberMethods != null){

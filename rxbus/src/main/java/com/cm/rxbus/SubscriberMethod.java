@@ -23,6 +23,10 @@ public class SubscriberMethod {
     }
 
 
+    /**
+     * 调用方法
+     * @param o 参数
+     */
     public void invoke(Object o){
         try {
             method.invoke(subscriber, o);
@@ -32,6 +36,5 @@ public class SubscriberMethod {
             e.printStackTrace();
         }
     }
-
 
 }

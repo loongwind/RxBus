@@ -21,7 +21,4 @@ public enum  ThreadMode {
      */
     NEW_THREAD
 
-
-
-
 }
