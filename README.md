@@ -2,6 +2,12 @@
 RxJava实现的事件总线RxBus
 
 ###使用方法
+
+module的build.gradle中加入:
+```
+    compile 'com.cm:rxbus:1.0'
+```
+
 ####注册:
 ```
 RxBus.getDefault().register(this);
